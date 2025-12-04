@@ -1,0 +1,125 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.chat-input {
+  width: 100%;
+  padding: 16px 24px 24px;
+  background: linear-gradient(to top, $bg-secondary 50%, transparent);
+
+  @include mobile {
+    padding: 12px 16px 20px;
+  }
+
+  &__container {
+    max-width: $chat-max-width;
+    margin: 0 auto;
+  }
+
+  &__wrapper {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    background-color: $bg-input;
+    border: 1px solid $border-color;
+    border-radius: $radius-xl;
+    padding: 12px 16px;
+    transition: border-color $transition-fast, box-shadow $transition-fast;
+
+    &:focus-within {
+      border-color: rgba($accent-primary, 0.5);
+      box-shadow: 0 0 0 2px rgba($accent-primary, 0.1);
+    }
+  }
+
+  &__textarea {
+    flex: 1;
+    resize: none;
+    max-height: $input-max-height;
+    line-height: 1.5;
+    padding: 4px 0;
+    @include custom-scrollbar;
+
+    &::placeholder {
+      color: $text-muted;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  &__send {
+    @include flex-center;
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    background-color: $text-muted;
+    border-radius: $radius-md;
+    color: $bg-primary;
+    transition: all $transition-fast;
+    opacity: 0.5;
+    cursor: not-allowed;
+
+    &--active {
+      background-color: $text-primary;
+      opacity: 1;
+      cursor: pointer;
+
+      &:hover {
+        background-color: $text-secondary;
+      }
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  &__loading {
+    display: flex;
+    gap: 3px;
+    align-items: center;
+
+    span {
+      width: 4px;
+      height: 4px;
+      background-color: $bg-primary;
+      border-radius: 50%;
+      animation: loadingDot 1.4s ease-in-out infinite both;
+
+      &:nth-child(1) {
+        animation-delay: -0.32s;
+      }
+
+      &:nth-child(2) {
+        animation-delay: -0.16s;
+      }
+    }
+  }
+
+  @keyframes loadingDot {
+    0%, 80%, 100% {
+      transform: scale(0.6);
+      opacity: 0.5;
+    }
+    40% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  &__disclaimer {
+    text-align: center;
+    font-size: 0.75rem;
+    color: $text-muted;
+    margin-top: 12px;
+  }
+}
+
