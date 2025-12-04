@@ -1,0 +1,110 @@
+@use 'sass:color';
+@use 'variables' as *;
+@use 'mixins' as *;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: 'Söhne', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  background-color: $bg-secondary;
+  color: $text-primary;
+  line-height: 1.6;
+  overflow: hidden;
+}
+
+#root {
+  height: 100vh;
+  width: 100vw;
+}
+
+a {
+  color: $accent-primary;
+  text-decoration: none;
+  transition: color $transition-fast;
+
+  &:hover {
+    color: color.adjust($accent-primary, $lightness: 10%);
+  }
+}
+
+button {
+  @include button-reset;
+  transition: all $transition-fast;
+}
+
+input,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+  background: transparent;
+  border: none;
+  color: $text-primary;
+
+  &::placeholder {
+    color: $text-muted;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
+// Selection
+::selection {
+  background-color: rgba($accent-primary, 0.3);
+  color: $text-primary;
+}
+
+// Focus visible
+:focus-visible {
+  outline: 2px solid $accent-primary;
+  outline-offset: 2px;
+}
+
+// Loading animation
+.loading-dots {
+  display: inline-flex;
+  gap: 4px;
+
+  span {
+    width: 6px;
+    height: 6px;
+    background-color: $text-muted;
+    border-radius: 50%;
+    animation: bounce 1.4s ease-in-out infinite both;
+
+    &:nth-child(1) {
+      animation-delay: -0.32s;
+    }
+
+    &:nth-child(2) {
+      animation-delay: -0.16s;
+    }
+  }
+}
+
+@keyframes bounce {
+  0%,
+  80%,
+  100% {
+    transform: scale(0);
+  }
+  40% {
+    transform: scale(1);
+  }
+}
+

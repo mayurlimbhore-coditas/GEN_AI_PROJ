@@ -1,0 +1,118 @@
+@use 'sass:color';
+@use 'variables' as *;
+
+// Flexbox utilities
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+// Custom scrollbar
+@mixin custom-scrollbar {
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $scrollbar-track;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $scrollbar-thumb;
+    border-radius: $radius-full;
+
+    &:hover {
+      background: color.adjust($scrollbar-thumb, $lightness: 10%);
+    }
+  }
+}
+
+// Button reset
+@mixin button-reset {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+// Truncate text
+@mixin truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Media queries
+@mixin mobile {
+  @media (max-width: $breakpoint-md) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (max-width: $breakpoint-lg) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: $breakpoint-lg) {
+    @content;
+  }
+}
+
+// Animation
+@mixin fade-in($duration: $transition-normal) {
+  animation: fadeIn $duration ease forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@mixin slide-up($duration: $transition-normal) {
+  animation: slideUp $duration ease forwards;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Typing animation
+@mixin typing-dots {
+  @keyframes typingDot {
+    0%, 60%, 100% {
+      transform: translateY(0);
+    }
+    30% {
+      transform: translateY(-4px);
+    }
+  }
+}
+

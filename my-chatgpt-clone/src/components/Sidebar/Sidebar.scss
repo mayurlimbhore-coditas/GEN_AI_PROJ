@@ -1,0 +1,180 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.sidebar {
+  @include flex-column;
+  @include custom-scrollbar;
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  width: $sidebar-width;
+  background-color: $bg-primary;
+  border-right: 1px solid $border-color;
+  transition: transform $transition-normal, width $transition-normal;
+  z-index: 100;
+
+  &--closed {
+    transform: translateX(-100%);
+
+    @include mobile {
+      transform: translateX(-100%);
+    }
+  }
+
+  &--open {
+    transform: translateX(0);
+  }
+
+  &__header {
+    @include flex-between;
+    padding: 12px;
+    gap: 8px;
+  }
+
+  &__new-chat {
+    @include flex-center;
+    flex: 1;
+    gap: 10px;
+    padding: 12px 16px;
+    background-color: transparent;
+    border: 1px solid $border-color;
+    border-radius: $radius-md;
+    color: $text-primary;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all $transition-fast;
+
+    &:hover {
+      background-color: $bg-hover;
+    }
+
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  &__toggle {
+    @include flex-center;
+    width: 44px;
+    height: 44px;
+    border-radius: $radius-md;
+    color: $text-secondary;
+
+    &:hover {
+      background-color: $bg-hover;
+      color: $text-primary;
+    }
+  }
+
+  &__content {
+    @include flex-column;
+    @include custom-scrollbar;
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 12px;
+    gap: 16px;
+  }
+
+  &__group {
+    @include flex-column;
+    gap: 4px;
+  }
+
+  &__group-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: $text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 8px 12px 4px;
+  }
+
+  &__list {
+    list-style: none;
+  }
+
+  &__item {
+    margin-bottom: 2px;
+  }
+
+  &__chat-btn {
+    @include flex-center;
+    width: 100%;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: $radius-md;
+    color: $text-secondary;
+    text-align: left;
+    justify-content: flex-start;
+
+    &:hover {
+      background-color: $bg-hover;
+      color: $text-primary;
+    }
+
+    svg {
+      flex-shrink: 0;
+      opacity: 0.7;
+    }
+  }
+
+  &__chat-title {
+    @include truncate;
+    flex: 1;
+    font-size: 0.9rem;
+  }
+
+  &__footer {
+    padding: 12px;
+    border-top: 1px solid $border-color;
+  }
+
+  &__user {
+    @include flex-center;
+    width: 100%;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: $radius-md;
+    color: $text-primary;
+    justify-content: flex-start;
+
+    &:hover {
+      background-color: $bg-hover;
+    }
+  }
+
+  &__avatar {
+    @include flex-center;
+    width: 32px;
+    height: 32px;
+    background-color: $accent-primary;
+    border-radius: $radius-full;
+
+    svg {
+      color: white;
+    }
+  }
+
+  &__open-btn {
+    @include flex-center;
+    position: fixed;
+    left: 16px;
+    top: 16px;
+    width: 44px;
+    height: 44px;
+    background-color: $bg-tertiary;
+    border-radius: $radius-md;
+    color: $text-secondary;
+    z-index: 99;
+    box-shadow: $shadow-md;
+    @include fade-in;
+
+    &:hover {
+      background-color: $bg-hover;
+      color: $text-primary;
+    }
+  }
+}
+

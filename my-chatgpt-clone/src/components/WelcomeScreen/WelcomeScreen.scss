@@ -1,0 +1,109 @@
+@use 'sass:color';
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.welcome-screen {
+  @include flex-center;
+  flex: 1;
+  padding: 24px;
+
+  &__content {
+    @include flex-column;
+    align-items: center;
+    text-align: center;
+    max-width: 680px;
+  }
+
+  &__logo {
+    @include flex-center;
+    width: 72px;
+    height: 72px;
+    background-color: $bg-tertiary;
+    border-radius: $radius-full;
+    margin-bottom: 24px;
+    color: $text-primary;
+    @include fade-in;
+
+    svg {
+      width: 36px;
+      height: 36px;
+    }
+  }
+
+  &__title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: $text-primary;
+    margin-bottom: 32px;
+    @include slide-up;
+
+    @include mobile {
+      font-size: 1.5rem;
+    }
+  }
+
+  &__suggestions {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    width: 100%;
+
+    @include mobile {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__suggestion {
+    @include flex-column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 16px;
+    background-color: $bg-tertiary;
+    border: 1px solid $border-color;
+    border-radius: $radius-md;
+    text-align: left;
+    transition: all $transition-fast;
+    @include slide-up;
+
+    @for $i from 1 through 4 {
+      &:nth-child(#{$i}) {
+        animation-delay: #{$i * 0.1}s;
+      }
+    }
+
+    &:hover {
+      background-color: $bg-hover;
+      border-color: color.adjust($border-color, $lightness: 10%);
+      transform: translateY(-2px);
+    }
+  }
+
+  &__suggestion-icon {
+    font-size: 1.25rem;
+    color: $text-primary;
+    display: flex;
+    align-items: center;
+
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  &__suggestion-text {
+    @include flex-column;
+    gap: 2px;
+  }
+
+  &__suggestion-title {
+    font-weight: 500;
+    color: $text-primary;
+    font-size: 0.95rem;
+  }
+
+  &__suggestion-desc {
+    font-size: 0.85rem;
+    color: $text-muted;
+  }
+}
+
