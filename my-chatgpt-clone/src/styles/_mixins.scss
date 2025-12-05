@@ -58,19 +58,31 @@
 
 // Media queries
 @mixin mobile {
-  @media (max-width: $breakpoint-md) {
+  @media (max-width: #{$breakpoint-md - 1px}) {
     @content;
   }
 }
 
 @mixin tablet {
-  @media (max-width: $breakpoint-lg) {
+  @media (min-width: $breakpoint-md) and (max-width: #{$breakpoint-lg - 1px}) {
+    @content;
+  }
+}
+
+@mixin tablet-down {
+  @media (max-width: #{$breakpoint-lg - 1px}) {
     @content;
   }
 }
 
 @mixin desktop {
   @media (min-width: $breakpoint-lg) {
+    @content;
+  }
+}
+
+@mixin small-mobile {
+  @media (max-width: #{$breakpoint-sm - 1px}) {
     @content;
   }
 }
@@ -116,3 +128,11 @@
   }
 }
 
+// Safe area padding for mobile devices
+@mixin safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+@mixin safe-area-top {
+  padding-top: env(safe-area-inset-top, 0);
+}

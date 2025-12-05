@@ -5,19 +5,29 @@ import './MessageList.scss';
 
 interface MessageListProps {
   messages: Message[];
+  onRegenerate?: () => void;
 }
 
-const MessageList = ({ messages }: MessageListProps) => {
+const MessageList = ({ messages, onRegenerate }: MessageListProps) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  // Find last assistant message index
+  const lastAssistantIdx = messages.reduce((lastIdx, msg, idx) => {
+    return msg.role === 'assistant' ? idx : lastIdx;
+  }, -1);
+
   return (
     <div className="message-list">
-      {messages.map((message) => (
-        <ChatMessage key={message.id} message={message} />
+      {messages.map((message, idx) => (
+        <ChatMessage 
+          key={message.id} 
+          message={message}
+          onRegenerate={idx === lastAssistantIdx ? onRegenerate : undefined}
+        />
       ))}
       <div ref={messagesEndRef} />
     </div>
@@ -25,4 +35,3 @@ const MessageList = ({ messages }: MessageListProps) => {
 };
 
 export default MessageList;
-

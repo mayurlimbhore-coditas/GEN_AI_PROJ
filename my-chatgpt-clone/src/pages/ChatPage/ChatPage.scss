@@ -4,9 +4,11 @@
 .chat-page {
   display: flex;
   height: 100vh;
+  height: 100dvh; // Dynamic viewport height for mobile browsers
   width: 100vw;
   background-color: $bg-secondary;
   transition: padding-left $transition-normal;
+  overflow: hidden;
 
   &--sidebar-open {
     @include desktop {
@@ -19,16 +21,24 @@
     flex: 1;
     height: 100%;
     min-width: 0;
+    position: relative;
   }
 
   &__header {
     @include flex-between;
     padding: 12px 24px;
     border-bottom: 1px solid transparent;
+    flex-shrink: 0;
+    gap: 12px;
 
-    @include mobile {
+    @include tablet-down {
       padding: 12px 16px;
-      padding-left: 64px; // Space for sidebar toggle
+      padding-left: 60px; // Space for sidebar toggle
+    }
+
+    @include small-mobile {
+      padding: 10px 12px;
+      padding-left: 56px;
     }
   }
 
@@ -36,6 +46,11 @@
     font-size: 1rem;
     font-weight: 600;
     color: $text-primary;
+    white-space: nowrap;
+
+    @include small-mobile {
+      font-size: 0.9rem;
+    }
   }
 
   &__model {
@@ -57,6 +72,99 @@
     @include flex-column;
     flex: 1;
     overflow: hidden;
+    min-height: 0;
+  }
+
+  &__error {
+    padding: 0 24px 16px;
+
+    @include tablet-down {
+      padding: 0 16px 12px;
+    }
+
+    @include small-mobile {
+      padding: 0 12px 10px;
+    }
+  }
+
+  &__error-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    max-width: $chat-max-width;
+    margin: 0 auto;
+    padding: 12px 16px;
+    background-color: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: $radius-md;
+    color: #fca5a5;
+
+    @include small-mobile {
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+  }
+
+  &__error-icon {
+    font-size: 1.25rem;
+    flex-shrink: 0;
+  }
+
+  &__error-text {
+    flex: 1;
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+
+  &__error-retry {
+    padding: 6px 16px;
+    background-color: rgba(239, 68, 68, 0.2);
+    border-radius: $radius-sm;
+    color: #fca5a5;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all $transition-fast;
+    flex-shrink: 0;
+
+    &:hover {
+      background-color: rgba(239, 68, 68, 0.3);
+    }
+
+    @include small-mobile {
+      width: 100%;
+      padding: 8px 16px;
+    }
+  }
+
+  &__stop {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 8px;
+  }
+
+  &__stop-btn {
+    @include flex-center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: $bg-tertiary;
+    border: 1px solid $border-color;
+    border-radius: $radius-full;
+    color: $text-primary;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all $transition-fast;
+
+    svg {
+      font-size: 1.25rem;
+    }
+
+    &:hover {
+      background-color: $bg-hover;
+      border-color: $text-muted;
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
   }
 }
-

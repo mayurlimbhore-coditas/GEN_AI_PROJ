@@ -14,6 +14,9 @@ html {
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  // Prevent text size adjustment on orientation change
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
@@ -24,17 +27,26 @@ body {
   color: $text-primary;
   line-height: 1.6;
   overflow: hidden;
+  // Prevent pull-to-refresh on mobile
+  overscroll-behavior: none;
+  // Support for dynamic viewport units
+  min-height: 100vh;
+  min-height: 100dvh;
 }
 
 #root {
   height: 100vh;
+  height: 100dvh;
   width: 100vw;
+  overflow: hidden;
 }
 
 a {
   color: $accent-primary;
   text-decoration: none;
   transition: color $transition-fast;
+  // Better touch targets
+  -webkit-tap-highlight-color: transparent;
 
   &:hover {
     color: color.adjust($accent-primary, $lightness: 10%);
@@ -44,6 +56,9 @@ a {
 button {
   @include button-reset;
   transition: all $transition-fast;
+  // Better touch targets
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 input,
@@ -53,6 +68,8 @@ textarea {
   background: transparent;
   border: none;
   color: $text-primary;
+  // Prevent zoom on iOS when focusing inputs
+  font-size: 16px;
 
   &::placeholder {
     color: $text-muted;
@@ -73,6 +90,11 @@ textarea {
 :focus-visible {
   outline: 2px solid $accent-primary;
   outline-offset: 2px;
+}
+
+// Remove focus outline on click (keep for keyboard navigation)
+:focus:not(:focus-visible) {
+  outline: none;
 }
 
 // Loading animation
@@ -108,3 +130,18 @@ textarea {
   }
 }
 
+// Scrollbar for Firefox
+* {
+  scrollbar-width: thin;
+  scrollbar-color: $scrollbar-thumb transparent;
+}
+
+// Hide scrollbar but allow scrolling (utility class)
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

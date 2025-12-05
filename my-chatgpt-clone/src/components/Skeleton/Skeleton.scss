@@ -1,0 +1,85 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    $bg-tertiary 25%,
+    $bg-hover 50%,
+    $bg-tertiary 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite ease-in-out;
+
+  &--text {
+    border-radius: $radius-sm;
+  }
+
+  &--circular {
+    border-radius: 50%;
+  }
+
+  &--rectangular {
+    border-radius: $radius-md;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.chat-skeleton {
+  @include flex-column;
+  gap: 24px;
+  padding: 24px;
+  max-width: $chat-max-width;
+  margin: 0 auto;
+
+  @include tablet-down {
+    padding: 16px;
+    gap: 16px;
+  }
+
+  &__item {
+    display: flex;
+    gap: 16px;
+
+    @include tablet-down {
+      gap: 12px;
+    }
+  }
+
+  &__content {
+    @include flex-column;
+    flex: 1;
+    gap: 8px;
+  }
+}
+
+.sidebar-skeleton {
+  @include flex-column;
+  gap: 8px;
+  padding: 8px 12px;
+
+  &__title {
+    margin-top: 16px;
+    margin-bottom: 8px;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+  }
+}
+

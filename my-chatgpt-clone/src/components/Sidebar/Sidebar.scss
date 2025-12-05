@@ -8,28 +8,53 @@
   left: 0;
   top: 0;
   height: 100vh;
+  height: 100dvh;
   width: $sidebar-width;
   background-color: $bg-primary;
   border-right: 1px solid $border-color;
-  transition: transform $transition-normal, width $transition-normal;
+  transition: transform $transition-normal;
   z-index: 100;
+
+  @include tablet-down {
+    width: 280px;
+    box-shadow: $shadow-lg;
+  }
+
+  @include small-mobile {
+    width: 85vw;
+    max-width: 300px;
+  }
 
   &--closed {
     transform: translateX(-100%);
-
-    @include mobile {
-      transform: translateX(-100%);
-    }
   }
 
   &--open {
     transform: translateX(0);
   }
 
+  &__overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 99;
+    @include fade-in(0.2s);
+
+    @include tablet-down {
+      display: block;
+    }
+  }
+
   &__header {
     @include flex-between;
     padding: 12px;
     gap: 8px;
+    flex-shrink: 0;
+
+    @include small-mobile {
+      padding: 10px;
+    }
   }
 
   &__new-chat {
@@ -45,6 +70,11 @@
     font-weight: 500;
     transition: all $transition-fast;
 
+    @include small-mobile {
+      padding: 10px 12px;
+      font-size: 0.85rem;
+    }
+
     &:hover {
       background-color: $bg-hover;
     }
@@ -52,6 +82,7 @@
     svg {
       width: 18px;
       height: 18px;
+      flex-shrink: 0;
     }
   }
 
@@ -61,6 +92,12 @@
     height: 44px;
     border-radius: $radius-md;
     color: $text-secondary;
+    flex-shrink: 0;
+
+    @include small-mobile {
+      width: 40px;
+      height: 40px;
+    }
 
     &:hover {
       background-color: $bg-hover;
@@ -75,6 +112,10 @@
     overflow-y: auto;
     padding: 8px 12px;
     gap: 16px;
+
+    @include small-mobile {
+      padding: 8px 10px;
+    }
   }
 
   &__group {
@@ -101,17 +142,35 @@
 
   &__chat-btn {
     @include flex-center;
+    position: relative;
     width: 100%;
     gap: 12px;
     padding: 10px 12px;
+    padding-right: 36px;
     border-radius: $radius-md;
     color: $text-secondary;
     text-align: left;
     justify-content: flex-start;
+    cursor: pointer;
+    transition: all $transition-fast;
 
     &:hover {
       background-color: $bg-hover;
       color: $text-primary;
+
+      .sidebar__delete-btn {
+        opacity: 1;
+      }
+    }
+
+    &--active {
+      background-color: $bg-hover;
+      color: $text-primary;
+    }
+
+    &:focus-visible {
+      outline: 2px solid $accent-primary;
+      outline-offset: -2px;
     }
 
     svg {
@@ -126,9 +185,51 @@
     font-size: 0.9rem;
   }
 
+  &__delete-btn {
+    @include flex-center;
+    position: absolute;
+    right: 8px;
+    width: 28px;
+    height: 28px;
+    border-radius: $radius-sm;
+    color: $text-muted;
+    opacity: 0;
+    transition: all $transition-fast;
+
+    &:hover {
+      background-color: rgba(255, 0, 0, 0.1);
+      color: #f87171;
+    }
+
+    @include tablet-down {
+      opacity: 1;
+    }
+  }
+
+  &__empty {
+    @include flex-column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
+    text-align: center;
+    color: $text-muted;
+    font-size: 0.875rem;
+    gap: 4px;
+
+    p:first-child {
+      color: $text-secondary;
+    }
+  }
+
   &__footer {
     padding: 12px;
     border-top: 1px solid $border-color;
+    flex-shrink: 0;
+    @include safe-area-bottom;
+
+    @include small-mobile {
+      padding: 10px;
+    }
   }
 
   &__user {
@@ -151,6 +252,7 @@
     height: 32px;
     background-color: $accent-primary;
     border-radius: $radius-full;
+    flex-shrink: 0;
 
     svg {
       color: white;
@@ -160,8 +262,8 @@
   &__open-btn {
     @include flex-center;
     position: fixed;
-    left: 16px;
-    top: 16px;
+    left: 12px;
+    top: 12px;
     width: 44px;
     height: 44px;
     background-color: $bg-tertiary;
@@ -171,10 +273,16 @@
     box-shadow: $shadow-md;
     @include fade-in;
 
+    @include small-mobile {
+      left: 8px;
+      top: 8px;
+      width: 40px;
+      height: 40px;
+    }
+
     &:hover {
       background-color: $bg-hover;
       color: $text-primary;
     }
   }
 }
-

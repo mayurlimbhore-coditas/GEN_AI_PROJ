@@ -1,83 +1,154 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import type { Chat } from '../../services/storage';
 import './Sidebar.scss';
-
-interface ChatHistory {
-  id: string;
-  title: string;
-  timestamp: Date;
-}
 
 interface SidebarProps {
   isOpen: boolean;
   onToggle: () => void;
   onNewChat: () => void;
+  chats?: Chat[];
+  activeChatId?: string | null;
+  onSelectChat?: (chatId: string) => void;
+  onDeleteChat?: (chatId: string) => void;
 }
 
-const Sidebar = ({ isOpen, onToggle, onNewChat }: SidebarProps) => {
-  const [chatHistory] = useState<ChatHistory[]>([
-    { id: '1', title: 'Understanding React Hooks', timestamp: new Date() },
-    { id: '2', title: 'Building a REST API', timestamp: new Date(Date.now() - 86400000) },
-    { id: '3', title: 'CSS Grid vs Flexbox', timestamp: new Date(Date.now() - 172800000) },
-  ]);
+const Sidebar = ({ 
+  isOpen, 
+  onToggle, 
+  onNewChat,
+  chats = [],
+  activeChatId,
+  onSelectChat,
+  onDeleteChat,
+}: SidebarProps) => {
+
+  // Close sidebar on escape key
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        onToggle();
+      }
+    };
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [isOpen, onToggle]);
+
+  // Prevent body scroll when sidebar is open on mobile
+  useEffect(() => {
+    if (isOpen && window.innerWidth < 1024) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
 
   const formatDate = (date: Date) => {
-    const today = new Date();
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
+    const lastWeek = new Date(today);
+    lastWeek.setDate(lastWeek.getDate() - 7);
+    
+    const chatDate = new Date(date);
+    const chatDay = new Date(chatDate.getFullYear(), chatDate.getMonth(), chatDate.getDate());
 
-    if (date.toDateString() === today.toDateString()) {
+    if (chatDay >= today) {
       return 'Today';
-    } else if (date.toDateString() === yesterday.toDateString()) {
+    } else if (chatDay >= yesterday) {
       return 'Yesterday';
+    } else if (chatDay >= lastWeek) {
+      return 'Previous 7 Days';
     } else {
-      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      return chatDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
     }
   };
 
-  const groupedChats = chatHistory.reduce((groups, chat) => {
-    const dateKey = formatDate(chat.timestamp);
+  // Group chats by date
+  const groupedChats = chats.reduce((groups, chat) => {
+    const dateKey = formatDate(chat.updatedAt);
     if (!groups[dateKey]) {
       groups[dateKey] = [];
     }
     groups[dateKey].push(chat);
     return groups;
-  }, {} as Record<string, ChatHistory[]>);
+  }, {} as Record<string, Chat[]>);
+
+  const handleDeleteClick = (e: React.MouseEvent, chatId: string) => {
+    e.stopPropagation();
+    onDeleteChat?.(chatId);
+  };
+
+  const handleNewChat = () => {
+    onNewChat();
+    // Close sidebar on mobile after creating new chat
+    if (window.innerWidth < 1024) {
+      onToggle();
+    }
+  };
 
   return (
     <>
+      {/* Overlay for mobile */}
+      {isOpen && <div className="sidebar__overlay" onClick={onToggle} />}
+
       <aside className={`sidebar ${isOpen ? 'sidebar--open' : 'sidebar--closed'}`}>
         <div className="sidebar__header">
-          <button className="sidebar__new-chat" onClick={onNewChat}>
+          <button className="sidebar__new-chat" onClick={handleNewChat}>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
             <span>New chat</span>
           </button>
-          <button className="sidebar__toggle" onClick={onToggle}>
+          <button className="sidebar__toggle" onClick={onToggle} aria-label="Close sidebar">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M3 6H21M3 12H21M3 18H21" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+              <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
             </svg>
           </button>
         </div>
 
         <div className="sidebar__content">
-          {Object.entries(groupedChats).map(([date, chats]) => (
-            <div key={date} className="sidebar__group">
-              <h3 className="sidebar__group-title">{date}</h3>
-              <ul className="sidebar__list">
-                {chats.map((chat) => (
-                  <li key={chat.id} className="sidebar__item">
-                    <button className="sidebar__chat-btn">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                      <span className="sidebar__chat-title">{chat.title}</span>
-                    </button>
-                  </li>
-                ))}
-              </ul>
+          {chats.length === 0 ? (
+            <div className="sidebar__empty">
+              <p>No conversations yet</p>
+              <p>Start a new chat to begin</p>
             </div>
-          ))}
+          ) : (
+            Object.entries(groupedChats).map(([date, dateChats]) => (
+              <div key={date} className="sidebar__group">
+                <h3 className="sidebar__group-title">{date}</h3>
+                <ul className="sidebar__list">
+                  {dateChats.map((chat) => (
+                    <li key={chat.id} className="sidebar__item">
+                      <div 
+                        className={`sidebar__chat-btn ${chat.id === activeChatId ? 'sidebar__chat-btn--active' : ''}`}
+                        onClick={() => onSelectChat?.(chat.id)}
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => e.key === 'Enter' && onSelectChat?.(chat.id)}
+                      >
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                        <span className="sidebar__chat-title">{chat.title}</span>
+                        <button 
+                          className="sidebar__delete-btn"
+                          onClick={(e) => handleDeleteClick(e, chat.id)}
+                          title="Delete chat"
+                        >
+                          <DeleteOutlineIcon fontSize="small" />
+                        </button>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))
+          )}
         </div>
 
         <div className="sidebar__footer">
@@ -94,7 +165,7 @@ const Sidebar = ({ isOpen, onToggle, onNewChat }: SidebarProps) => {
       </aside>
 
       {!isOpen && (
-        <button className="sidebar__open-btn" onClick={onToggle}>
+        <button className="sidebar__open-btn" onClick={onToggle} aria-label="Open sidebar">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M3 6H21M3 12H21M3 18H21" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
           </svg>
@@ -105,4 +176,3 @@ const Sidebar = ({ isOpen, onToggle, onNewChat }: SidebarProps) => {
 };
 
 export default Sidebar;
-

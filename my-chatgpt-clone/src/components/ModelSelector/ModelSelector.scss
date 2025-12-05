@@ -1,0 +1,195 @@
+@use 'sass:color';
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.model-selector {
+  position: relative;
+
+  &__trigger {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 12px;
+    background: transparent;
+    border: 1px solid $border-color;
+    border-radius: 8px;
+    color: $text-primary;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all $transition-fast;
+
+    @include small-mobile {
+      padding: 6px 10px;
+      font-size: 0.8rem;
+      gap: 2px;
+    }
+
+    &:hover {
+      background: $bg-hover;
+      border-color: color.adjust($border-color, $lightness: 10%);
+    }
+
+    &--open {
+      background: $bg-hover;
+      border-color: $accent-primary;
+    }
+  }
+
+  &__selected-name {
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  &__arrow {
+    font-size: 1.25rem;
+    transition: transform $transition-fast;
+    color: $text-secondary;
+
+    @include small-mobile {
+      font-size: 1.1rem;
+    }
+
+    &--open {
+      transform: rotate(180deg);
+    }
+  }
+
+  &__dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    min-width: 280px;
+    max-width: calc(100vw - 32px);
+    background: $bg-secondary;
+    border: 1px solid $border-color;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    z-index: 100;
+    overflow: hidden;
+    animation: dropdownFadeIn 0.15s ease-out;
+
+    @include tablet-down {
+      min-width: 260px;
+      right: 0;
+    }
+
+    @include small-mobile {
+      min-width: auto;
+      width: calc(100vw - 24px);
+      max-width: 300px;
+      right: -8px;
+    }
+  }
+
+  &__header {
+    padding: 12px 16px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: $text-secondary;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid $border-color;
+
+    @include small-mobile {
+      padding: 10px 14px;
+    }
+  }
+
+  &__list {
+    padding: 8px;
+    max-height: 300px;
+    overflow-y: auto;
+    @include custom-scrollbar;
+
+    @include small-mobile {
+      padding: 6px;
+      max-height: 250px;
+    }
+  }
+
+  &__option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 12px;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: left;
+    transition: background $transition-fast;
+
+    @include small-mobile {
+      padding: 10px;
+    }
+
+    &:hover {
+      background: $bg-hover;
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+
+    &--selected {
+      background: rgba($accent-primary, 0.1);
+
+      &:hover {
+        background: rgba($accent-primary, 0.15);
+      }
+    }
+  }
+
+  &__option-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  &__option-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: $text-primary;
+
+    @include small-mobile {
+      font-size: 0.85rem;
+    }
+  }
+
+  &__option-desc {
+    font-size: 0.75rem;
+    color: $text-secondary;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    @include small-mobile {
+      font-size: 0.7rem;
+    }
+  }
+
+  &__check {
+    font-size: 1.25rem;
+    color: $accent-primary;
+    flex-shrink: 0;
+    margin-left: 8px;
+
+    @include small-mobile {
+      font-size: 1.1rem;
+    }
+  }
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

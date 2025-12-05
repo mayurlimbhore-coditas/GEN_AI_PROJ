@@ -7,5 +7,13 @@
   flex: 1;
   overflow-y: auto;
   padding-bottom: 24px;
-}
+  -webkit-overflow-scrolling: touch; // Smooth scrolling on iOS
 
+  @include tablet-down {
+    padding-bottom: 16px;
+  }
+
+  @include small-mobile {
+    padding-bottom: 12px;
+  }
+}
